@@ -19,6 +19,9 @@ jobs:
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -H 147.79.102.223 >> ~/.ssh/known_hosts
+        export SSH_AUTH_SOCK=$(mktemp)
+        eval "$(ssh-agent -s)"
+        ssh-add ~/.ssh/id_rsa
 
     - name: Deploy to Server
       run: |
