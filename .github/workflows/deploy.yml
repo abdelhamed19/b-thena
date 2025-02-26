@@ -3,7 +3,7 @@ name: Deploy to aaPanel
 on:
   push:
     branches:
-      - main  # Change to your main branch
+      - main  # Change this to your main branch
 
 jobs:
   deploy:
@@ -18,11 +18,11 @@ jobs:
         mkdir -p ~/.ssh
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan -H your-server-ip >> ~/.ssh/known_hosts
+        ssh-keyscan -H 147.79.102.223 >> ~/.ssh/known_hosts
 
     - name: Deploy to Server
       run: |
-        ssh -i ~/.ssh/id_rsa root@your-server-ip << 'EOF'
+        ssh -i ~/.ssh/id_rsa root@147.79.102.223 << 'EOF'
         cd /www/wwwroot/bthena/b-thena
         git pull origin main
         composer install --no-dev --ignore-platform-reqs
