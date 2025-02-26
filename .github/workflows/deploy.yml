@@ -28,7 +28,6 @@ jobs:
         ssh -i ~/.ssh/id_rsa root@147.79.102.223 << 'EOF'
         cd /www/wwwroot/bthena/b-thena
         git pull origin main
-        composer install --no-dev --ignore-platform-reqs
         php artisan migrate --force
         php artisan config:clear
         php artisan cache:clear
