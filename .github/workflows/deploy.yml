@@ -1,0 +1,38 @@
+name: Deploy to aaPanel
+
+on:
+  push:
+    branches:
+      - main  # Change to your main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup SSH
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H your-server-ip >> ~/.ssh/known_hosts
+
+    - name: Deploy to Server
+      run: |
+        ssh -i ~/.ssh/id_rsa root@your-server-ip << 'EOF'
+        cd /www/wwwroot/bthena/b-thena
+        git pull origin main
+        composer install --no-dev --ignore-platform-reqs
+        php artisan migrate --force
+        php artisan config:clear
+        php artisan cache:clear
+        php artisan config:cache
+        php artisan route:clear
+        chown -R www:www /www/wwwroot/bthena/b-thena
+        chmod -R 775 /www/wwwroot/bthena/b-thena/storage /www/wwwroot/bthena/b-thena/bootstrap/cache
+        service php-fpm restart
+        service apache2 restart
+        EOF
