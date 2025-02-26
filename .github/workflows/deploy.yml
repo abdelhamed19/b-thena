@@ -15,13 +15,13 @@ jobs:
 
     - name: Setup SSH
       run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan -H 147.79.102.223 >> ~/.ssh/known_hosts
-        export SSH_AUTH_SOCK=$(mktemp)
-        eval "$(ssh-agent -s)"
-        ssh-add ~/.ssh/id_rsa
+       mkdir -p ~/.ssh
+       echo "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/id_rsa
+       chmod 600 ~/.ssh/id_rsa
+       ssh-keyscan -H 147.79.102.223 >> ~/.ssh/known_hosts
+       export SSH_AUTH_SOCK=$(mktemp)
+       eval "$(ssh-agent -s)"
+       ssh-add ~/.ssh/id_rsa
 
     - name: Deploy to Server
       run: |
